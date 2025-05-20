@@ -1,0 +1,16 @@
+{{ if .Values.staticPVC.enabled }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "demo.fullname" . }}-static
+spec:
+  # claimRef:
+  #   name: {{ include "demo.fullname" . }}-static
+  accessModes:
+    {{ toYaml .Values.staticPVC.accessModes | nindent 6 }}
+  capacity:
+    storage: {{ .Values.staticPVC.available }}
+  hostPath:
+    path: {{ .Values.staticPVC.path }}
+  storageClassName: {{ .Values.staticPVC.storageClassName }}
+{{- end}}

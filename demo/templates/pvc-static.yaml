@@ -1,0 +1,14 @@
+{{ if .Values.staticPVC.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: 
+  name: {{ include "demo.fullname" . }}-static
+spec:
+  volumeName: {{ .Values.staticPVC.name }}
+  accessModes:
+    {{ toYaml .Values.staticPVC.accessModes | nindent 6 }}
+  resources:
+    requests:
+      storage: {{ .Values.staticPVC.storage }}
+  storageClassName: {{ .Values.staticPVC.storageClassName }}
+{{- end }}

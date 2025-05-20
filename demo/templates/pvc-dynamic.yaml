@@ -1,0 +1,12 @@
+{{ if .Values.dynamicPVC.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: 
+  name: {{ include "demo.fullname" . }}-dynamic
+spec:
+  accessModes:
+    {{ toYaml .Values.dynamicPVC.accessModes | nindent 6 }}
+  resources:
+    requests:
+      storage: {{ .Values.dynamicPVC.storage }}
+{{- end }}

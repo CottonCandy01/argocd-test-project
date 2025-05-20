@@ -1,0 +1,86 @@
+# Default values for test-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+replicaCount: 4
+
+# This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
+image:
+  repository: httpd
+  # This sets the pull policy for images.
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "2.4"
+
+# This is to override the chart name.
+nameOverride: "httpd-chart"
+fullnameOverride: "httpd-chart"
+
+# This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
+service:
+  # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
+  type: ClusterIP
+  # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
+  port: 80
+
+# Additional volumes on the output Deployment definition.
+volumes:
+- name: html-volume
+  configMap: 
+    name: httpd-chart-webpage
+    items:
+    - key: index.html
+      path: index.html
+- name: httpd-chart-dynamic
+  persistentVolumeClaim: 
+    claimName: httpd-chart-dynamic
+- name: httpd-chart-static
+  persistentVolumeClaim:
+    claimName: httpd-chart-static
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts:
+- name: html-volume
+  mountPath: "/usr/local/apache2/htdocs/index.html"
+  subPath: index.html
+  readOnly: true
+- name: httpd-chart-static
+  mountPath: /data/static/
+- name: httpd-chart-dynamic
+  mountPath: /data/dynamic/
+
+webContent:
+  name: index.html
+  html: |
+    <!DOCTYPE html>
+      <html>
+          <header>
+              THIS IS THE HEADER
+          </header>
+          <body>
+              <h1>
+                  THIS IS THE TITLE
+              </h1>
+              <p>
+                  HERE'S THE CONTENT WITH HELM TEMPLATES!
+              </p>
+          </body>
+      </html>
+
+staticPVC:
+  name: httpd-chart-static
+  enabled: true
+  accessModes: 
+    - ReadWriteMany
+  available: 10Mi
+  storage: 3Mi
+  path: /tmp/static
+  storageClassName: crc-csi-hostpath-provisioner
+
+dynamicPVC: 
+  enabled: true
+  accessModes: 
+    - ReadWriteMany
+  storage: 3Mi   
+  path: /helm/dynamic
