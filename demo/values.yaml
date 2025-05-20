@@ -17,6 +17,24 @@ image:
 nameOverride: "httpd-chart"
 fullnameOverride: "httpd-chart"
 
+staticPVC:
+  name: httpd-chart-static
+  enabled: true
+  accessModes: 
+    - ReadWriteMany
+  available: 10Mi
+  storage: 3Mi
+  path: /tmp/static
+  storageClassName: crc-csi-hostpath-provisioner
+
+dynamicPVC: 
+  enabled: true
+  accessModes: 
+    - ReadWriteMany
+  storage: 3Mi   
+  path: /helm/dynamic
+
+
 # This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
 service:
   # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
@@ -35,9 +53,13 @@ volumes:
 - name: httpd-chart-dynamic
   persistentVolumeClaim: 
     claimName: httpd-chart-dynamic
+{{- if .Values.staticPVC.enabled }}
 - name: httpd-chart-static
   persistentVolumeClaim:
     claimName: httpd-chart-static
+{{- end }}
+
+
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts:
@@ -45,8 +67,10 @@ volumeMounts:
   mountPath: "/usr/local/apache2/htdocs/index.html"
   subPath: index.html
   readOnly: true
+{{- if .Values.staticPVC.enabled }}
 - name: httpd-chart-static
   mountPath: /data/static/
+{{- end }}
 - name: httpd-chart-dynamic
   mountPath: /data/dynamic/
 
@@ -67,20 +91,3 @@ webContent:
               </p>
           </body>
       </html>
-
-staticPVC:
-  name: httpd-chart-static
-  enabled: true
-  accessModes: 
-    - ReadWriteMany
-  available: 10Mi
-  storage: 3Mi
-  path: /tmp/static
-  storageClassName: crc-csi-hostpath-provisioner
-
-dynamicPVC: 
-  enabled: true
-  accessModes: 
-    - ReadWriteMany
-  storage: 3Mi   
-  path: /helm/dynamic

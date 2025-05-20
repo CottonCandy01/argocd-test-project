@@ -1,3 +1,2 @@
 staticPVC:
-  name: httpd-chart-static2
-  path: /tmp/static2
+  enabled: false
