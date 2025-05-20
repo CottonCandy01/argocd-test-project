@@ -1,0 +1,14 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: httpd-route
+spec:
+  # host: scrivere qui un dns valido
+  # tls:
+  #   termination: edge
+  selector: httpd
+  port:
+    targetPort: 80
+  to:
+    kind: Service
+    name: httpd

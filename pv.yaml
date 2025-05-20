@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: static-pv
+spec:
+  accessModes:
+    - ReadOnlyMany
+  capacity:
+    storage: 10Mi
+  storageClassName: standard
+  hostPath:
+    path: /tmp/html-volume

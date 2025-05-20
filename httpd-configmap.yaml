@@ -1,0 +1,20 @@
+apiVersion: v1
+data:
+  index.html: |-
+    <!DOCTYPE html>
+    <html>
+        <header>
+            THIS IS THE HEADER
+        </header>
+        <body>
+            <h1>
+                THIS IS THE TITLE
+            </h1>
+            <p>
+                HERE'S THE CONTENT
+            </p>
+        </body>
+    </html>
+kind: ConfigMap
+metadata:
+  name: first-webpage
