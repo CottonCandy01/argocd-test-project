@@ -6,7 +6,7 @@ spec:
   # host: scrivere qui un dns valido
   # tls:
   #   termination: edge
-  selector: httpd
+  # selector: httpd
   port:
     targetPort: 80
   to:
