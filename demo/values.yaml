@@ -53,11 +53,12 @@ volumes:
 - name: httpd-chart-dynamic
   persistentVolumeClaim: 
     claimName: httpd-chart-dynamic
-{{- if .Values.staticPVC.enabled }}
+
+static-volumes:
 - name: httpd-chart-static
   persistentVolumeClaim:
     claimName: httpd-chart-static
-{{- end }}
+
 
 
 
@@ -67,12 +68,12 @@ volumeMounts:
   mountPath: "/usr/local/apache2/htdocs/index.html"
   subPath: index.html
   readOnly: true
-{{- if .Values.staticPVC.enabled }}
-- name: httpd-chart-static
-  mountPath: /data/static/
-{{- end }}
 - name: httpd-chart-dynamic
   mountPath: /data/dynamic/
+
+static-volumeMounts:
+- name: httpd-chart-static
+  mountPath: /data/static/
 
 webContent:
   name: index.html
