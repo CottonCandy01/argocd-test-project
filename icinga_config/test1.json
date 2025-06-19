@@ -1,0 +1,8 @@
+{
+  "adminUser": "icingaadmin",
+  "adminPassword": "mypwd",
+  "cluster": {
+    "server": "https://kubernetes.default.svc",
+    "name": "engineering-dev"
+  }
+}
